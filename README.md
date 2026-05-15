@@ -1,6 +1,6 @@
 # Codec2-mod experimental fork
 This repository contains a minimal extraction of the Codec2's 3200 bps mode, intended as a clean base for experimentation, optimization, and future research.
-Only the 3200 bps mode is supported - other Codec2 modes were intentionally excluded.
+1600 bps has been experimentally added.
 
 The initial goal of this work was to:
 - Isolate only the functions and data structures actually used by the 3200 bps mode
@@ -32,6 +32,7 @@ The code structure and memory usage are intentionally designed to suit embedded 
 
 Compared to the reference Codec2 implementation, this fork already includes:
 - Complete refactoring of the 3200 bps mode into a small codebase
+- Implementation of 1600 bps mode
 - Removal of unused variables, modes, code paths, and legacy state not required for 3200 bps operation
 - Elimination of all persistent dynamic memory allocation (no runtime `malloc`/`free`)
 - Fully deterministic, fixed-size codec state suitable for static allocation
