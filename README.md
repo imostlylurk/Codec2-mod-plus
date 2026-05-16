@@ -1,9 +1,9 @@
 # Codec2-mod experimental fork
-This repository contains a minimal extraction of the Codec2's 3200 bps mode, intended as a clean base for experimentation, optimization, and future research.
+This repository contains a minimal extraction of the Codec2's 1600 bps mode, intended as a clean base for experimentation, optimization, and future research.
 1600 bps has been experimentally added.
 
 The initial goal of this work was to:
-- Isolate only the functions and data structures actually used by the 3200 bps mode
+- Isolate only the functions and data structures actually used by the 1600 bps mode
 - Achieve bit-exact encoder output compared to the reference `libcodec2`
 - Remove unused code paths, state variables, and legacy scaffolding
 - Establish a codebase that is as small and optimized as possible, suitable for further development
@@ -18,6 +18,7 @@ Bit-exactness refers to the encoded bitstream - decoded audio samples may differ
 > The `main` branch contains the refactored and optimized implementation while preserving bitstream compatibility.
 > 
 > **The removal of floating-point math was not a goal of this work.**
+> Added standalone encoder, decoder, and encodec (encode incoming .wav to c2, then immediately decode back to .wav) to aid in debugging/experimentation
 
 Planned next steps include:
 - Quantizer experiments (energy, pitch, LSPs)
@@ -31,8 +32,7 @@ The code structure and memory usage are intentionally designed to suit embedded 
 ## Current state and implemented changes
 
 Compared to the reference Codec2 implementation, this fork already includes:
-- Complete refactoring of the 3200 bps mode into a small codebase
-- Implementation of 1600 bps mode
+- Complete refactoring of the 1600 bps mode into a small codebase
 - Removal of unused variables, modes, code paths, and legacy state not required for 3200 bps operation
 - Elimination of all persistent dynamic memory allocation (no runtime `malloc`/`free`)
 - Fully deterministic, fixed-size codec state suitable for static allocation
@@ -72,7 +72,7 @@ Instead, the codec state is explicitly owned by the caller and can be allocated 
 ```c
 struct CODEC2 *c2;
 
-c2 = codec2_create(CODEC2_MODE_3200);
+c2 = codec2_create(CODEC2_MODE_1600);
 
 codec2_encode(c2, encoded, speech);
 codec2_decode(c2, speech, encoded);
@@ -96,12 +96,14 @@ No destroy/free function is required, however `codec2_init()` has to be called b
 ## Important notice: derivative work
 
 > [!NOTE]
-> **This is a derivative work.**
+> **This is a derivative of a derivative work.**
 
-This code is based heavily and directly on the Codec2 speech codec by venerable David Rowe, VK5DGR<sup>[1](https://github.com/drowe67) [2](https://www.qrz.com/db/VK5DGR)</sup> et al.
+This code is minimally modified from Woj/SP5WWP's Codec2-mod, which is based heavily and directly on the Codec2 speech codec by venerable David Rowe, VK5DGR<sup>[1](https://github.com/drowe67) [2](https://www.qrz.com/db/VK5DGR)</sup> et al.
 
 Original project:
 - https://github.com/drowe67/codec2
+Minified/optimized project:
+ - https://github.com/M17-Project/Codec2-mod
 
 Large portions of the code, algorithms, constants, and overall design originate from Codec2 and remain recognizably derived from it.  
 All original credit for the Codec2 design, algorithms, and implementation belongs to David Rowe and the Codec2 contributors.
